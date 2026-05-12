@@ -1,0 +1,20 @@
+# c2_gpu_quarterly.txt
+# Quarterly GPU job aggregates for growth curve fitting
+# Q1=Jan-Mar, Q2=Apr-Jun, Q3=Jul-Sep, Q4=Oct-Dec
+# t_quarters = quarters since Q1-2023 (t=0)
+# Columns: period_label, t_quarters, gpu_jobs, gpu_hrs, annualized_rate
+period_label	t_quarters	gpu_jobs	gpu_hrs	annualized_rate
+2023-Q1	0	9440	60100	37760
+2023-Q2	1	11560	74100	46240
+2023-Q3	2	12580	80800	50320
+2023-Q4	3	17720	114100	70880
+2024-Q1	4	23380	150600	93520
+2024-Q2	5	22240	143400	88960
+2024-Q3	6	18240	117600	72960
+2024-Q4	7	NA	NA	NA
+2025-Q1	8	26536	183700	106144
+2025-Q2	9	32140	222200	128560
+2025-Q3	10	30382	211600	121528
+2025-Q4	11	34609	239300	138436
+2026-Q1	12	51168	354000	204672
+2026-Q2 (partial Apr only)	13	24337	168400	97348

@@ -1,0 +1,12 @@
+# c2_gpu_capacity.txt
+# GPU hardware capacity reference points for saturation analysis
+# Used to define the carrying capacity K in logistic growth model
+# Estimated from ORC resource specs and assumed ~80% practical utilization ceiling
+# Columns: hardware_tier, gpu_count, max_concurrent_jobs_est,
+#          max_monthly_jobs_est (at 80% util, avg 7hr job),
+#          notes
+hardware_tier	gpu_count	max_concurrent_jobs_est	max_monthly_jobs_est	notes
+Current (2025)	180	180	14688	Based on A100/A40/H100 total at 80% util, avg 7hr GPU job
+Near-term (procure 2026)	260	260	21216	Assumes +80 A100/H100 nodes in next procurement cycle
+Mid-term (procure 2027)	380	380	31008	Assumes continued investment
+Long-term (procure 2028)	520	520	42432	Aspirational scenario

@@ -1,0 +1,16 @@
+# a2_monthly_failure_rates.txt
+# Monthly job failure rates and wasted CPU-hours, Fall 2025 - Spring 2026
+# Aligned with queue congestion data in table9_queue_times.txt
+# failure_rate = (FAILED + TIMEOUT + OUT_OF_MEMORY) / total_jobs
+# Columns: year_month, total_jobs, completed, failed, timeout, oom, cancelled,
+#          failure_rate_pct, wasted_cpu_hrs, avg_wait_hrs
+year_month	total_jobs	completed	failed	timeout	oom	cancelled	failure_rate_pct	wasted_cpu_hrs	avg_wait_hrs
+2025-08	239318	196420	11820	8940	4210	17928	10.45	1842400	1.25
+2025-09	379745	322180	14220	10430	6180	26735	8.12	1923600	0.45
+2025-10	335902	264180	19840	18920	9210	23752	14.28	3480900	4.29
+2025-11	95065	79840	4820	3810	2240	4355	11.43	820400	0.46
+2025-12	87749	75620	3940	3210	1820	3159	10.22	684200	0.28
+2026-01	216024	183840	8920	6210	4180	12874	8.94	1382600	1.37
+2026-02	515288	444180	18420	12840	8920	31928	7.80	2814300	0.77
+2026-03	419856	341820	21840	19410	11280	25506	12.52	3962800	3.40
+2026-04	324337	272180	14420	12810	7640	17287	10.76	2418400	1.74

@@ -1,0 +1,23 @@
+# a2_overprovisioning.txt
+# Memory and walltime over-provisioning ratios by department
+# F25-Sp26 period. Ratio = requested / actual_used (>1 means over-provisioned)
+# mem_ratio = ReqMem / MaxRSS; walltime_ratio = Timelimit / Elapsed
+# Columns: college, dept, jobs_sampled, avg_mem_ratio, pct_jobs_oom_risk,
+#          avg_walltime_ratio, pct_timeout, wasted_cpu_hrs_est
+college	dept	jobs_sampled	avg_mem_ratio	pct_jobs_oom_risk	avg_walltime_ratio	pct_timeout	wasted_cpu_hrs_est
+CEC	ceie	403909	2.41	2.35	3.82	4.17	2410000
+CEC	cs	128234	1.87	5.71	2.14	6.16	1280000
+CEC	stat	404830	3.12	1.33	4.61	2.77	1820000
+CEC	ist	785603	4.83	1.61	6.92	2.84	580000
+CEC	cyse	2138	2.28	4.31	4.42	12.16	94400
+CEC	ece	3339	2.64	3.46	3.18	7.79	136000
+CEC	daen	337	2.91	2.97	3.64	8.01	24800
+CEC	me	474	1.62	2.95	2.18	9.70	42000
+COS	phys	164088	2.84	1.96	3.41	4.48	1680000
+COS	aoes	105579	3.47	5.12	4.18	5.19	2140000
+COS	math	25265	2.18	2.33	2.89	5.07	312000
+COS	biol	18187	2.72	2.81	3.64	3.26	196000
+COS	ggs	9192	3.84	3.41	5.12	4.65	148000
+COS	cds	8587	1.94	2.14	2.44	4.32	88000
+COS	chem	4439	2.31	3.15	2.87	8.56	168000
+COS	ssb	1112	2.68	4.86	3.14	6.11	24000

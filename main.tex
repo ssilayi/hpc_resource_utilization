@@ -832,6 +832,211 @@ modelling, neural-network potentials) and SSB (AlphaFold, genomic deep learning)
 while these communities are in early adoption.
 
 %% ====================================================================
+\section{Job Failure Rate Analysis}
+\label{sec:failure}
+
+This section presents analysis A2: a systematic examination of job exit states,
+the wasted compute resources attributable to failure modes, and the relationship
+between job failure rates and queue congestion.
+
+\subsection{Exit-State Distribution by Department}
+
+Figure~\ref{fig:failure} presents four panels characterising job failure patterns
+across departments and time.  Panel~A shows the percentage breakdown of exit
+states for the nine highest-volume departments in Fall~2025--Spring~2026.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figA2_failure_analysis.png}
+  \caption{Job failure rate analysis, Fall~2025--Spring~2026.
+    \textbf{(A)}~Exit-state distribution as a percentage of total jobs by
+      department.  Annotated percentages above each bar indicate the combined
+      failure rate (FAILED + TIMEOUT + OUT\_OF\_MEMORY).  IST (8.6\,\%) and
+      STAT (8.6\,\%) show the lowest absolute failure rates; CEIE (11.2\,\%),
+      AOES (13\,\%), and ME (21.6\,\%) are among the highest.
+    \textbf{(B)}~Monthly job failure rate (bars, left axis) vs.\ average queue
+      wait time (line, right axis).  Congested months (October~2025,
+      March~2026) are shaded; Pearson $r = 0.79$ indicates strong
+      co-occurrence of high failure rates and long wait times.
+    \textbf{(C)}~Wasted CPU-hours by failure type and college.  Timeouts
+      dominate waste in both CEC (2.4M hrs) and COS (1.8M hrs), suggesting
+      systematic walltime under-estimation.
+    \textbf{(D)}~Memory over-provisioning ratio (requested / actual used)
+      vs.\ percentage of jobs at OOM risk by department.  Departments in the
+      upper-right quadrant (high ratio \emph{and} high OOM risk) are priority
+      consultation targets; AOES, CS, and SSB are the most urgent cases.}
+  \label{fig:failure}
+\end{figure}
+
+Table~\ref{tab:failure_summary} summarises failure rates by department.
+
+\begin{table}[H]
+  \centering
+  \caption{Job failure metrics by department, Fall~2025--Spring~2026.
+    Failure rate = (FAILED + TIMEOUT + OOM) / total jobs.
+    Wasted CPU-hours include all non-COMPLETED, non-CANCELLED states.}
+  \label{tab:failure_summary}
+  \small
+  \begin{tabularx}{\textwidth}{l l R{2.0cm} R{2.4cm} R{2.6cm} R{2.2cm}}
+    \toprule
+    \textbf{College} & \textbf{Dept} &
+    \textbf{Total Jobs} & \textbf{Failure Rate (\%)} &
+    \textbf{Wasted CPU-Hrs} & \textbf{Mem Ratio} \\
+    \midrule
+    CEC & ceie & 403,909 & 11.2 & 2,347,300 & 2.41 \\
+    CEC & cs   & 128,234 & 21.6 & 451,700   & 1.87 \\
+    CEC & stat & 404,830 &  8.6 & 146,510   & 3.12 \\
+    CEC & ist  & 785,603 &  8.6 & 254,610   & 4.83 \\
+    CEC & me   &     474 & 21.6 &  25,740   & 1.62 \\
+    \midrule
+    COS & phys & 164,088 & 13.3 & 1,173,360 & 2.84 \\
+    COS & aoes & 105,579 & 17.6 & 1,238,880 & 3.47 \\
+    COS & chem &   4,439 & 26.2 &   273,600 & 2.31 \\
+    COS & math &  25,265 & 13.0 &   111,820 & 2.18 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Chemistry (CHEM, 26.2\,\%) and Mechanical Engineering (ME, 21.6\,\%) exhibit
+the highest failure rates of any department with substantial job volume.  For
+CHEM, the dominant failure mode is TIMEOUT, consistent with the high average
+CPU-hours per job (258~hrs) and the difficulty of accurately estimating the
+wall time required by \textit{ab initio} molecular dynamics simulations.
+For ME, both TIMEOUT and FAILED exits are prominent, likely reflecting
+incorrect parallel scaling configurations in CFD and finite-element codes.
+
+\subsection{Failure Rate--Congestion Co-occurrence}
+
+Panel~B of Figure~\ref{fig:failure} reveals a strong positive correlation
+($r = 0.79$) between monthly job failure rate and average queue wait time.
+October~2025 and March~2026 are simultaneously the highest-failure and
+longest-wait months in the dataset.  This co-occurrence is consistent with
+a feedback mechanism: congestion causes jobs to start later and under different
+memory pressure conditions than users anticipated when setting resource requests,
+increasing the probability of OOM and timeout failures, which in turn return jobs
+to the queue and amplify congestion.
+
+\subsection{Wasted CPU-Hours: Scale and Composition}
+
+Panel~C quantifies the aggregate cost of job failures.  In Fall~2025--Spring~2026,
+timeout failures alone account for approximately 2.4~million wasted CPU-hours in
+CEC and 1.8~million in COS.  Across all failure modes, the total wasted allocation
+exceeds 7~million CPU-hours in the nine-month window --- equivalent to roughly
+6--8\,\% of total CPU-hour consumption.  Of this, OOM kills account for
+$\sim$0.4~million hours in CEC and $\sim$0.5~million hours in COS, identifying
+memory over-provisioning (Panel~D) and under-provisioning as co-existing problems
+in different user populations.
+
+\subsection{Memory Over-Provisioning and OOM Risk}
+
+Panel~D plots the memory over-provisioning ratio (requested memory / measured
+peak RSS) against the percentage of jobs approaching OOM (actual usage within
+10\,\% of request) for each department.  IST shows the highest over-provisioning
+ratio (4.83) with low OOM risk --- consistent with defensive over-allocation to
+avoid failures, at the cost of holding back capacity from other users.  AOES
+(ratio 3.47, OOM risk 5.1\,\%) and SSB (ratio 2.68, OOM risk 4.9\,\%) occupy
+the upper-right quadrant, indicating both over-provisioning \emph{and} genuine
+memory pressure --- the most actionable profile for targeted consultation.
+
+%% ====================================================================
+\section{GPU Demand Growth Projection}
+\label{sec:projection}
+
+This section presents analysis C2: exponential and logistic growth curve fitting
+to the historical GPU job count series, together with a three-scenario demand
+projection to Q4-2028.
+
+\subsection{Historical Growth Rate}
+
+Figure~\ref{fig:projection} presents the growth analysis across four panels.
+Panel~A fits an exponential growth model
+$N(t) = N_0 \, e^{rt}$
+to the 39-month monthly GPU job count series (January~2023 through April~2026).
+The best-fit parameters are $N_0 = 3{,}159$ jobs/month and
+$r = 0.044$~month$^{-1}$, yielding a doubling time of approximately
+\textbf{15.7~months}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figC2_gpu_growth_projection.png}
+  \caption{GPU demand growth projection, Hopper HPC Cluster.
+    \textbf{(A)}~Monthly GPU job counts (points) with exponential fit (line)
+      and 90\,\% confidence band (shading).  Doubling time $\approx 15.7$
+      months; COS GPU adoption onset annotated at $\sim$Jan~2026.
+    \textbf{(B)}~Three-scenario projection to Q4-2028 with hardware capacity
+      reference lines.  Scenario~1 (exponential): 72K jobs/month by Dec~2028.
+      Scenario~2 (logistic, current capacity ceiling): saturation at 12K/month.
+      Scenario~3 (COS-accelerated, expanded capacity): 18K/month.
+    \textbf{(C)}~Quarterly GPU-hours by year; Q1 2023--2025 grew +206\,\%,
+      and 2026 Q1 already exceeds any full quarter in 2025.
+    \textbf{(D)}~GPU share of total job submissions over time with a linear
+      trend fit (+0.28\,\%/yr since Jan~2025) and the 10\,\% qualitative
+      milestone threshold.}
+  \label{fig:projection}
+\end{figure}
+
+\subsection{Three-Scenario Projections}
+
+Table~\ref{tab:projections} presents the December~2028 projected monthly GPU
+job counts under the three scenarios, alongside the hardware capacity ceilings
+used in each.
+
+\begin{table}[H]
+  \centering
+  \caption{GPU demand projection scenarios to December~2028.
+    Capacity ceiling is estimated from current or planned GPU node counts at
+    80\,\% practical utilisation and an average job duration of 7~hours.}
+  \label{tab:projections}
+  \small
+  \begin{tabularx}{\textwidth}{l L{5.0cm} R{2.4cm} R{2.6cm} R{2.2cm}}
+    \toprule
+    \textbf{Scenario} & \textbf{Model and Assumption} &
+    \textbf{Dec-2028 (K/mo)} & \textbf{Capacity Ceiling (K/mo)} &
+    \textbf{Saturation Year} \\
+    \midrule
+    1 -- Exponential & Continued $r = 0.044$/month; no hardware constraint &
+    72 & \emph{n/a} & \emph{n/a} \\
+    2 -- Logistic (current) & Logistic saturation at current 180-GPU pool
+    ($\times$0.85 practical util.) & 12 & 14.7 & 2026 \\
+    3 -- COS-accelerated & Logistic with $r \times 1.35$; expanded to 260-GPU
+    pool post-procurement & 18 & 21.2 & 2027--2028 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{Scenario~1} (pure exponential) is physically impossible without additional
+hardware: monthly demand would reach the current capacity ceiling of $\sim$14,700
+jobs/month by approximately mid-2026, which is consistent with the queue pressure
+already observed.  \textbf{Scenario~2} (logistic, current hardware) predicts
+saturation at the current ceiling imminently, implying that without procurement,
+GPU queue wait times will become a chronic operational problem in the next 6--12
+months.  \textbf{Scenario~3} (COS-accelerated with near-term procurement) provides
+the only trajectory under which demand growth is sustainable through 2028.
+
+\subsection{Quarterly GPU-Hours and GPU Share Trends}
+
+Panel~C demonstrates that Q1 GPU-hours have grown 206\,\% from 2023 to 2025, and
+that 2026~Q1 alone exceeds any single quarter in 2025 --- an acceleration rather
+than a deceleration.  Panel~D shows that GPU jobs as a fraction of total
+submissions have approximately doubled in the 2025--2026 window, with the
+November~2025 spike (12.4\,\%) representing the first exceedance of the 10\,\%
+qualitative milestone.  The linear trend fitted to the 2025--present data indicates
+a further increase of approximately +0.28\,\% per year in GPU share, driven
+primarily by COS adoption and instructional expansion.
+
+\subsection{Implications for Procurement Planning}
+
+The growth analysis provides a quantitative foundation for the procurement case
+outlined in Section~\ref{sec:interventions}.  Under the most conservative
+plausible scenario (Scenario~2), the current GPU pool reaches effective saturation
+within 2026.  Under Scenario~3, a procurement adding approximately 80 A100~80\,GB
+or H100~80\,GB nodes sustains growth through 2027--2028 before a second
+procurement cycle would be needed.  The exponential doubling time of 15.7~months
+means that hardware acquired in early 2027 would be meeting demand from a user
+base approximately twice the size of today's GPU community.  Delaying procurement
+by 12 months adds approximately one full doubling to the capacity deficit.
+
+%% ====================================================================
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
@@ -845,14 +1050,20 @@ workloads growing faster and exhibiting high consumption concentration;
 primary user, including the emergence of GPU adoption; (3)~IST has become the
 single largest job submitter by count while exhibiting the lowest per-job
 resource intensity; (4)~the CPU request distribution is bimodal, suggesting
-under-utilisation of shared-memory parallelism; and (5)~October and March produce
-predictable queue congestion events amenable to proactive management.
+under-utilisation of shared-memory parallelism; (5)~October and March produce
+predictable queue congestion events amenable to proactive management;
+(6)~job failure rates co-vary strongly with queue congestion ($r = 0.79$),
+and timeout failures alone waste over 4~million CPU-hours per nine-month window;
+and (7)~GPU demand is growing at a doubling time of 15.7~months and will exceed
+current hardware capacity within 2026 under all plausible scenarios without
+procurement action.
 
 These findings demonstrate that longitudinal, disaggregated HPC utilisation
 analysis yields actionable insights invisible in aggregate statistics.  Future
 work will deploy the NLP-based support ticket categorisation system~\citep{orc2025nlp}
 to link utilisation patterns to support burden, evaluate the proposed interventions
-through pre/post comparisons, and extend the analysis to include I/O behaviour.
+through pre/post comparisons, and extend the analysis to include I/O behaviour and
+user cohort lifecycle modelling.
 
 %% ---- acknowledgments ------------------------------------------------
 \section*{Acknowledgements}
