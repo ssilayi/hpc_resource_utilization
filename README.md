@@ -343,6 +343,13 @@ df = pd.read_csv("data/table3_cec_cpu.txt", sep="\t", comment="#")
 
 ---
 
+```r
+# Install packages (once)
+install.packages(c("ggplot2","dplyr","tidyr","scales","patchwork","ggrepel","readr","cowplot"))
+
+# Regenerate all figures
+Rscript scripts/R/run_all.R
+
 ## Citation
 
 ```bibtex
