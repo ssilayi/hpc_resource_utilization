@@ -3,33 +3,115 @@
 **Longitudinal Analysis of HPC Utilization at a Research University:  
 Trends, Insights, and Data-Driven Interventions for Optimized Resource Allocation**
 
-*George Mason University — Office of Research Computing*
+
 
 ---
 
-## Repository structure
+## Project Overview
+
+This repository contains the LaTeX paper, Python figure-generation scripts, and
+source data for a longitudinal study of the Hopper HPC cluster at George Mason
+University. The work spans two complementary analysis streams developed in
+parallel within the GMU ORC:
+
+### Stream 1 — Cluster utilization statistics (this repo)
+
+Analysis of Slurm job accounting records to characterise how researchers across
+GMU colleges and departments use Hopper. We extract CPU/GPU job counts, resource
+consumption (CPU-hours, GPU-hours, memory), wait times, and instructional account
+usage across three periods:
+
+| Period | Window | Total Jobs |
+|--------|--------|------------|
+| AY 2023–2024 (baseline) | Jul 2023 – Jun 2024 | ~1.65M est. |
+| Full Year 2025 (retrospective) | Jan – Dec 2025 | 2,283,321 |
+| Fall 2025 – Spring 2026 (current) | Aug 2025 – Apr 2026 | 2,905,604 |
+
+### Stream 2 — OS ticket analysis (companion repo)
+
+NLP-based analysis of the OSTicket help-desk database to understand researcher
+support needs. Tickets are extracted from the OSTicket MySQL database, matched
+with Slurm user records via fuzzy name matching, and categorised using
+transformer-based clustering (`all-MiniLM-L6-v2`). Key findings: semester-
+correlated ticket spikes, software support as the dominant ticket category, and
+steadily increasing ticket volume from 2021–2024.
+
+> **Companion repository:**
+> ```bash
+> git clone https://gitlab.orc.gmu.edu/Abhinav/os_tickets_analysis.git
+> ```
+
+Combining both streams allows ORC to move from *describing* cluster usage to
+*anticipating* user needs and deploying limited personnel resources more
+strategically — the core thesis of the framing document
+*Quantifying HPC Utilization for Optimized Resource Deployment* (2022).
+
+---
+
+## Compute Environment
+
+### Clusters (GMU ORC)
+
+**Hopper** — primary cluster (subject of this analysis)
+- 11,840 CPU cores
+- Slurm workload manager
+- Dual high-speed networking: 100 Gbps Ethernet spine / 25 Gbps leaf +
+  HDR InfiniBand (100 Gbps per node)
+- VAST flash-based scratch storage
+- GPU partition: NVIDIA A100 (40 GB & 80 GB), A40, H100, B200 via MIG and
+  full-device configurations
+- Access via SSH or Open OnDemand web interface
+  (JupyterLab, MATLAB, RStudio, interactive desktop)
+
+**Argo** — secondary cluster (not analysed here)
+- 2,000 CPU cores, 16–32 cores/node, ≥4 GB/core
+- High-memory nodes up to 1.5 TB RAM
+- GPUs: 4× NVIDIA V100 32 GB (NVLink) + K80 nodes (20 devices)
+- FDR InfiniBand (56 Gbps)
+
+### ORC Personnel — CaRCC Facings
+
+Resources at an HPC centre comprise *compute resources* and *personnel*.
+Following the [CaRCC Research Computing and Data Professionals framework](https://carcc.org/wp-content/uploads/2019/01/CI-ProfessionalizationJob-Families-and-CareerGuide.pdf),
+GMU ORC personnel are organised into four facings:
+
+| Facing | Role | Headcount |
+|--------|------|-----------|
+| Researcher-Facing | Computational Scientists + GRAs | 3 + 2 |
+| System-Facing | Systems Engineers | 3 |
+| Software/Data-Facing | — | — |
+| Sponsor/Stakeholder-Facing | Director | 1 |
+
+A central goal of this work is using utilization data to inform *how*
+researcher-facing specialists deploy their time — targeting heavy users,
+emerging GPU adopters, and instructional accounts for maximum impact.
+
+---
+
+## Repository Structure
 
 ```
 hopper_hpc_paper/
 │
-├── main.tex              ← Main LaTeX document (compile this)
-├── references.bib        ← BibTeX bibliography (22 references)
-├── .gitignore
+├── main.tex              ← Full LaTeX paper (compile this)
+├── references.bib        ← BibTeX bibliography (22 entries)
+├── main.pdf              ← Pre-compiled output (19 pages)
 ├── README.md             ← This file
+├── .gitignore            ← Excludes LaTeX build artefacts & Python cache
 │
-├── figures/              ← All 8 paper figures (300 DPI PNG)
-│   ├── fig1_annual_volume.png
-│   ├── fig2_college_jobs.png
-│   ├── fig3_department_comparison.png
-│   ├── fig4_gpu_analysis.png
-│   ├── fig5_queue_dynamics.png
-│   ├── fig6_cpu_distribution.png
-│   ├── fig7_instructional_gpu.png
-│   └── fig8_active_users.png
+├── figures/              ← 8 paper figures, 300 DPI PNG
+│   ├── fig1_annual_volume.png          Table 1  — job volume across 3 periods
+│   ├── fig2_college_jobs.png           Table 2  — jobs by institutional college
+│   ├── fig3_department_comparison.png  Tables 3-6 — CEC & COS dept profiles
+│   ├── fig4_gpu_analysis.png           Table 7  — GPU depts, Lorenz, top users
+│   ├── fig5_queue_dynamics.png         Table 9  — monthly volume + wait times
+│   ├── fig6_cpu_distribution.png                — bimodal CPU request histogram
+│   ├── fig7_instructional_gpu.png      Table 8  — instructional GPU accounts
+│   └── fig8_active_users.png                    — daily users + IST outlier
 │
-├── scripts/              ← Python scripts that generate the figures
-│   ├── plot_config.py    ← Shared style settings (edit colors/fonts here)
-│   ├── run_all.py        ← Run this to regenerate all figures at once
+├── scripts/              ← Python figure-generation scripts
+│   ├── plot_config.py    ← Shared colour palette, rcParams, helpers
+│   ├── run_all.py        ← Run all 8 scripts in sequence
 │   ├── fig1_annual_volume.py
 │   ├── fig2_college_jobs.py
 │   ├── fig3_department_comparison.py
@@ -39,237 +121,241 @@ hopper_hpc_paper/
 │   ├── fig7_instructional_gpu.py
 │   └── fig8_active_users.py
 │
-└── data/                 ← Tab-separated source data for all figures
-    ├── table1_annual_volume.txt
-    ├── table2_college_jobs.txt
-    ├── table3_cec_cpu.txt
-    ├── table4_cec_gpu.txt
-    ├── table5_cos_cpu.txt
-    ├── table6_cos_gpu.txt
-    ├── table7_instructional_gpu.txt
-    ├── table8_top_gpu_users.txt
-    ├── table9_queue_times.txt
-    ├── monthly_volume_2025.txt
-    ├── monthly_volume_f25_sp26.txt
-    ├── cpu_request_distribution.txt
-    ├── active_users_weekday.txt
-    └── gpu_lorenz_curve.txt
+└── data/                 ← Tab-separated source data (one file per table)
+    ├── table1_annual_volume.txt           Aggregate job counts, 3 periods
+    ├── table2_college_jobs.txt            Jobs by college, F25–Sp26
+    ├── table3_cec_cpu.txt                 CEC CPU job stats by department
+    ├── table4_cec_gpu.txt                 CEC GPU job stats by department
+    ├── table5_cos_cpu.txt                 COS CPU job stats by department
+    ├── table6_cos_gpu.txt                 COS GPU job stats by department
+    ├── table7_instructional_gpu.txt       Instructional GPU accounts
+    ├── table8_top_gpu_users.txt           Top GPU users (anonymised U01–U15)
+    ├── table9_queue_times.txt             Monthly run/wait times, F25–Sp26
+    ├── monthly_volume_2025.txt            Monthly jobs, Full Year 2025
+    ├── monthly_volume_f25_sp26.txt        Monthly jobs, Fall 25 – Spring 26
+    ├── cpu_request_distribution.txt       CPU cores requested histogram
+    ├── active_users_weekday.txt           Avg daily users by day of week
+    └── gpu_lorenz_curve.txt               GPU-hour concentration Lorenz curve
 ```
 
 ---
 
-## Quick start — compile locally
+## Data Sources
 
-**Requirements:** TeX Live 2022+ or MiKTeX, with `pdflatex` and `bibtex`.
+### Slurm job accounting records
+
+Exported from the Hopper Slurm database. Each record includes: user ID
+(anonymised), account (encodes department + college), submit/start/end times,
+requested and consumed CPUs, GPUs, nodes, memory, CPU-hours, GPU-hours, and
+exit state. Instructional accounts follow the convention
+`<course><number><semester><year>` (e.g., `cs678fl25` = CS 678, Fall 2025).
+
+### OSTicket database (Stream 2 — companion repo)
+
+Exported from the ORC OSTicket server via `mysqldump`, imported to a local MySQL
+instance, and joined with Slurm user data for department-level attribution:
 
 ```bash
-git clone <your-repo-url>
+# On the ORC OSTicket server
+mysqldump -u username -p osticket > osticket_dump.sql
+
+# On your local machine
+mysql -u username -p osticket < osticket_dump.sql
+```
+
+---
+
+## Quick Start — Compile Locally
+
+**Requirements:** TeX Live 2022+ or MiKTeX, Python 3.8+.
+
+```bash
+# Clone
+git clone https://github.com/<your-username>/hopper_hpc_paper.git
 cd hopper_hpc_paper
 
+# Compile the paper (option A: manual)
 pdflatex main.tex
 bibtex   main
 pdflatex main.tex
-pdflatex main.tex    # second pass resolves all cross-references
-```
+pdflatex main.tex   # second pass resolves all cross-references
 
-Or with `latexmk` (recommended — handles the full compile cycle automatically):
-
-```bash
+# Compile (option B: latexmk — handles all passes automatically)
 latexmk -pdf -bibtex main.tex
-```
 
-The compiled PDF will appear as `main.pdf`.
+# Regenerate all figures
+pip install matplotlib numpy pandas seaborn
+python scripts/run_all.py
+```
 
 ---
 
-## Connecting to Overleaf via Git
+## Connecting to Overleaf via GitHub
 
-Overleaf supports two-way Git synchronisation so you can edit in Overleaf
-and push/pull changes to/from this GitHub repository.
-
-### Step 1 — Push this repo to GitHub
+### Step 1 — Push to GitHub
 
 ```bash
-cd hopper_hpc_paper
-git init
+git init                          # skip if already a repo
 git add .
-git commit -m "Initial commit: paper, figures, scripts, data"
-
-# Create a new GitHub repository (do NOT initialise with a README)
-# Then add it as remote and push:
-git remote add origin https://github.com/<your-username>/<repo-name>.git
+git commit -m "Initial commit"
+git remote add origin https://github.com/<you>/<repo>.git
 git branch -M main
 git push -u origin main
 ```
 
-### Step 2 — Import into Overleaf from GitHub
+### Step 2 — Import into Overleaf
 
 1. Log in to [overleaf.com](https://www.overleaf.com).
-2. Click **New Project → Import from GitHub**.
-3. Authorise Overleaf to access your GitHub account (one-time).
-4. Select `<repo-name>` from the list and click **Import to Overleaf**.
+2. **New Project → Import from GitHub**.
+3. Authorise Overleaf's GitHub access (one-time OAuth).
+4. Select the repository and click **Import to Overleaf**.
 
-Overleaf will create a new project that is linked to your GitHub repository.
+### Step 3 — Configure Overleaf settings
 
-### Step 3 — Configure Overleaf compiler
+Menu ☰ → Settings:
 
-In the Overleaf project:
+| Setting | Value |
+|---------|-------|
+| Compiler | `pdfLaTeX` |
+| TeX Live version | 2023 (or latest) |
+| Main document | `main.tex` |
+| Bibliography tool | `BibTeX` |
 
-1. Click the **Menu** button (top-left ☰).
-2. Under **Settings**:
-   - **Compiler**: `pdfLaTeX`
-   - **TeX Live version**: `2023` (or latest available)
-   - **Main document**: `main.tex`
-   - **Bibliography tool**: `BibTeX`
-3. Click the green **Recompile** button.
+Click the green **Recompile** button. The paper compiles to 19 pages.
 
-### Step 4 — Sync changes between Overleaf and GitHub
+### Step 4 — Sync workflow
 
-**Pull changes from GitHub into Overleaf** (after you push from your local machine):
+| Direction | Action |
+|-----------|--------|
+| GitHub → Overleaf | Menu → GitHub → **Pull** |
+| Overleaf → GitHub | Menu → GitHub → **Push** |
 
-In the Overleaf project: **Menu → GitHub → Pull**.
-
-**Push Overleaf edits back to GitHub**:
-
-In the Overleaf project: **Menu → GitHub → Push**.
-
-> **Tip:** Always pull before you push to avoid merge conflicts.
+> Always **Pull** before **Push** to avoid merge conflicts.
 
 ---
 
-## Regenerating figures
+## Paper Structure (`main.tex`)
 
-If you update the source data in `data/` and want to regenerate the figures:
+| § | Label | Contents |
+|---|-------|----------|
+| 1 | `sec:intro` | Motivation, three structural findings, paper outline |
+| 2 | `sec:related` | HPC utilisation, GPU in academic HPC, instructional use, CaRCC |
+| 3 | `sec:system` | Hopper hardware, Slurm data sources, three coverage periods |
+| 4 | `sec:method` | Metrics, job classification, longitudinal comparison |
+| 5 | `sec:results` | 8 subsections: volume, college, CEC depts, COS depts, GPU, instructional, CPU distribution, queue |
+| 6 | `sec:discussion` | Structural transformation, GPU transition, instructional contention, bimodal CPU gap, congestion |
+| 7 | `sec:interventions` | Personnel specialisation, queue/scheduling policy, infrastructure, outreach |
+| 8 | `sec:conclusion` | Summary and future work (NLP ticket integration) |
 
-```bash
-# Install Python dependencies (only needed once)
-pip install matplotlib numpy pandas seaborn
+### Figure–Table map
 
-# Regenerate all 8 figures
-cd hopper_hpc_paper
-python scripts/run_all.py
-```
-
-This overwrites the PNGs in `figures/`. Then commit and push:
-
-```bash
-git add figures/
-git commit -m "Update figures from revised data"
-git push
-```
-
-In Overleaf: **Menu → GitHub → Pull** to pick up the new figures.
-
----
-
-## Modifying a single figure
-
-Each `scripts/figN_*.py` file is self-contained. For example, to update
-the queue-dynamics plot:
-
-```bash
-python scripts/fig5_queue_dynamics.py
-# → saves figures/fig5_queue_dynamics.png
-```
-
-The data it reads is `data/table9_queue_times.txt`. Edit the `.txt` file
-then re-run the script.
+| Figure | Paper tables | `\label` |
+|--------|-------------|---------|
+| `fig1_annual_volume.png` | Tab. 1 | `fig:annual_volume` |
+| `fig2_college_jobs.png` | Tab. 2 | `fig:college` |
+| `fig3_department_comparison.png` | Tabs. 3–6 | `fig:dept` |
+| `fig4_gpu_analysis.png` | Tab. 7 | `fig:gpu` |
+| `fig5_queue_dynamics.png` | Tab. 9 | `fig:queue` |
+| `fig6_cpu_distribution.png` | *(inline)* | `fig:cpu_dist` |
+| `fig7_instructional_gpu.png` | Tab. 8 | `fig:instructional` |
+| `fig8_active_users.png` | *(inline)* | `fig:users` |
 
 ---
 
-## Style customisation
+## Related Work and Repositories
 
-All figures share the style configuration in `scripts/plot_config.py`:
-
-| Setting | Where | Default |
-|---------|-------|---------|
-| Primary colour palette | `COLORS` dict | Blue `#2166AC`, Red `#D6604D`, Green `#4DAC26` … |
-| Figure DPI (save) | `rcParams["savefig.dpi"]` | 300 |
-| Figure DPI (screen) | `rcParams["figure.dpi"]` | 150 |
-| Font family | `rcParams["font.family"]` | DejaVu Sans (LaTeX-compatible) |
-| Axis spines | `rcParams["axes.spines.*"]` | Top/right removed |
-
-Edit `plot_config.py` and re-run `run_all.py` to apply changes to all figures.
+| Work | Description | Location |
+|------|-------------|----------|
+| **OS Ticket Analysis** | NLP/ML categorisation of ORC help-desk tickets (OSTicket MySQL → transformer clustering); companion to this paper| |
+| **GPU Utilization Statistics** | Early GPU-focused Hopper utilisation dashboard  |
+| **Quantifying HPC Utilization (2022)** | Original framing paper: CaRCC personnel deployment model + Slurm/ticket methodology | Included in project knowledge base |
+| **Hopper Stats 2023–2024** | Baseline utilisation report | Project knowledge base |
+| **Hopper Stats 2025 Retrospective** | Full-year 2025 report | Project knowledge base |
+| **Hopper Stats Fall 2025–Spring 2026** | Current-period report | Project knowledge base |
 
 ---
 
-## LaTeX document structure (`main.tex`)
+## Tech Stack
 
-| Section | `\label` | Contents |
-|---------|----------|----------|
-| 1 — Introduction | `sec:intro` | Motivation, three key findings, paper outline |
-| 2 — Related Work | `sec:related` | HPC utilisation, GPU computing, instructional use, CaRCC |
-| 3 — System & Data | `sec:system` | Hopper description, data periods, fields extracted |
-| 4 — Methodology | `sec:method` | Metrics, classification, longitudinal comparison |
-| 5 — Results | `sec:results` | Eight subsections, one per analysis dimension |
-| 6 — Discussion | `sec:discussion` | Four structural findings interpreted |
-| 7 — Interventions | `sec:interventions` | Personnel, policy, infrastructure, training |
-| 8 — Conclusion | `sec:conclusion` | Summary and future work |
+### Figure generation
 
-Figures are referenced as `\ref{fig:annual_volume}`, `\ref{fig:college}`, etc.  
-Tables are referenced as `\ref{tab:annual}`, `\ref{tab:cec_cpu}`, etc.
+| Package | Use |
+|---------|-----|
+| `matplotlib ≥ 3.6` | All plots |
+| `numpy ≥ 1.22` | Array operations |
+| `pandas ≥ 1.5` | TSV data loading |
+| `seaborn ≥ 0.12` | Colour utilities |
 
----
+### Ticket NLP (companion repo only)
 
-## Figure–table correspondence
+| Package | Use |
+|---------|-----|
+| `sentence-transformers` | Sentence embeddings (`all-MiniLM-L6-v2`) |
+| `scikit-learn` | Agglomerative clustering |
+| `transformers` (HuggingFace) | Pre-trained LLM backbone |
+| `tensorflow` / `pytorch` | Deep learning backend |
+| `fuzzywuzzy` | Fuzzy name matching (Slurm ↔ OSTicket) |
+| `wordcloud` | Ticket keyword visualisation |
+| `mysql-connector-python` | OSTicket database connection |
 
-| Figure | Table(s) | Section |
-|--------|----------|---------|
-| `fig1_annual_volume.png` | `tab:annual` | 5.1 |
-| `fig2_college_jobs.png` | `tab:college` | 5.2 |
-| `fig3_department_comparison.png` | `tab:cec_cpu`, `tab:cec_gpu`, `tab:cos_cpu`, `tab:cos_gpu` | 5.3–5.4 |
-| `fig4_gpu_analysis.png` | `tab:top_users` | 5.5 |
-| `fig5_queue_dynamics.png` | `tab:queue` | 5.8 |
-| `fig6_cpu_distribution.png` | *(inline text)* | 5.7 |
-| `fig7_instructional_gpu.png` | `tab:instructional` | 5.6 |
-| `fig8_active_users.png` | *(inline text)* | 5.1, 5.3 |
+### LaTeX packages
 
----
-
-## Data file format
-
-All files in `data/` are plain-text, tab-separated values (TSV):
-
-- Lines beginning with `#` are comments.
-- The first non-comment line is the column header.
-- Subsequent lines are data rows.
-- Numbers use `.` as the decimal separator.
-
-They can be opened directly in Excel, LibreOffice Calc, or read with
-`pandas.read_csv(..., sep='\t', comment='#')`.
+| Package | Use |
+|---------|-----|
+| `natbib` + `abbrvnat` | Numbered citations (`\citep`, `\citet`) |
+| `booktabs` + `tabularx` | Publication-quality tables |
+| `graphicx` | `\includegraphics` for figures |
+| `hyperref` | Coloured cross-references + PDF metadata |
+| `geometry` | 1-inch margins, letter paper |
 
 ---
 
-## Dependencies
+## Style Customisation
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| Python | ≥ 3.8 | Figure generation |
-| matplotlib | ≥ 3.6 | Plotting |
-| numpy | ≥ 1.22 | Numerical arrays |
-| pandas | ≥ 1.5 | Data loading (optional) |
-| seaborn | ≥ 0.12 | (imported by some scripts) |
-| pdflatex | TeX Live 2022+ | PDF compilation |
-| bibtex | TeX Live 2022+ | Bibliography |
+All figures inherit from `scripts/plot_config.py`. Edit once, regenerate all:
 
----
-
-## Citation
-
-If you use the analysis or figures from this work, please cite:
-
-```bibtex
-@techreport{orc2026hopper,
-  author      = {{GMU Office of Research Computing}},
-  title       = {Longitudinal Analysis of {HPC} Utilization at a Research
-                 University: Trends, Insights, and Data-Driven Interventions
-                 for Optimized Resource Allocation},
-  institution = {George Mason University},
-  address     = {Fairfax, VA},
-  year        = {2026}
+```python
+COLORS = {
+    "blue":    "#2166AC",   # CPU jobs, primary series
+    "red":     "#D6604D",   # Wait times, congestion, GPU hours
+    "green":   "#4DAC26",   # COS data, Fall25–Sp26 series
+    "orange":  "#E08214",   # Total jobs, GPU stacked bars
+    "purple":  "#762A83",   # GPU % trend line
+    "gray":    "#878787",   # Background / intermediate ranges
 }
 ```
 
 ---
 
-*Last updated: May 2026 — GMU Office of Research Computing*
+## Data File Format
+
+All `data/*.txt` files are plain-text TSV:
+
+```
+# Lines beginning with # are comments
+# First non-comment line = column headers
+# Decimal separator: .  |  User IDs in table8: anonymised as U01–U15
+```
+
+```python
+import pandas as pd
+df = pd.read_csv("data/table3_cec_cpu.txt", sep="\t", comment="#")
+```
+
+---
+
+## Citation
+
+```bibtex
+@techreport{orc2026hopper,
+  author      = {{Silayi, Swabir}},
+  title       = {Longitudinal Analysis of {HPC} Utilization at a Research
+                 University: Trends, Insights, and Data-Driven Interventions
+                 for Optimized Resource Allocation},
+  institution = {Office of Research Computing, George Mason University},
+  address     = {Fairfax, VA, USA},
+  year        = {2026},
+  url         = {https://orc.gmu.edu}
+}
+```
+
