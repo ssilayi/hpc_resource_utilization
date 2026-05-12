@@ -1,0 +1,11 @@
+# Average unique active users by weekday
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: weekday, weekday_num, avg_users_2025_retro, avg_users_f25_sp26
+weekday	weekday_num	avg_users_2025_retro	avg_users_f25_sp26
+Monday	1	604	395
+Tuesday	2	617	411
+Wednesday	3	578	385
+Thursday	4	571	373
+Friday	5	572	370
+Saturday	6	506	320
+Sunday	7	514	323

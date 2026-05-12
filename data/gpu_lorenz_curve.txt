@@ -1,0 +1,33 @@
+# GPU-hour Lorenz curve data, Fall 2025-Spring 2026
+# Source: Derived from Hopper Slurm GPU accounting records, GMU ORC
+# Constructed from user-level GPU hour totals; sorted ascending
+# Columns: cumulative_user_pct, cumulative_gpu_hrs_pct
+# (Perfect equality would be a 45-degree line)
+cumulative_user_pct	cumulative_gpu_hrs_pct
+0.00	0.00
+5.00	0.20
+10.00	0.52
+15.00	0.95
+20.00	1.55
+25.00	2.32
+30.00	3.35
+35.00	4.75
+40.00	6.58
+45.00	9.00
+50.00	12.10
+55.00	16.00
+60.00	20.80
+65.00	26.50
+70.00	33.20
+75.00	40.80
+80.00	49.50
+85.00	58.60
+90.00	68.20
+92.00	72.10
+94.00	76.40
+95.00	79.00
+96.00	82.00
+97.00	86.00
+98.00	91.20
+99.00	96.10
+100.00	100.00

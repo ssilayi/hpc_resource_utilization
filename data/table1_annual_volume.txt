@@ -1,0 +1,8 @@
+# Table 1: Aggregate utilization statistics across analysis periods
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: period, months, cpu_jobs, gpu_jobs, total_jobs, gpu_pct
+# Note: AY2023-24 totals are estimated (raw aggregate not extracted); midpoints used for range
+period	months	cpu_jobs	gpu_jobs	total_jobs	gpu_pct
+AY 2023-2024	12	1650000	62500	1662500	3.76
+Full Year 2025	12	2159248	124073	2283321	5.43
+Fall 2025-Spring 2026	9	2777817	127787	2905604	4.40

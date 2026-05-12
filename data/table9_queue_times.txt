@@ -1,0 +1,13 @@
+# Table 9: Monthly average run time and wait time, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: year_month, avg_run_time_hrs, avg_wait_time_hrs, congestion_flag
+year_month	avg_run_time_hrs	avg_wait_time_hrs	congestion_flag
+2025-08	1.165074	1.252997	normal
+2025-09	0.705952	0.453766	low
+2025-10	1.041229	4.292453	congested
+2025-11	2.564708	0.457188	normal
+2025-12	2.275269	0.283023	low
+2026-01	1.496460	1.368766	normal
+2026-02	0.432272	0.769946	normal
+2026-03	0.675519	3.397407	congested
+2026-04	0.933531	1.742505	elevated

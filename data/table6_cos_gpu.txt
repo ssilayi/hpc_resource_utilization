@@ -1,0 +1,13 @@
+# Table 6: COS GPU job statistics by department, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Note: COS had ~2 GPU jobs in full-year 2025; this data represents new adoption
+# Columns: dept, dept_long, gpu_jobs, total_gpu_hrs, avg_gpu_hrs_job, avg_gpu_mem_gb
+dept	dept_long	gpu_jobs	total_gpu_hrs	avg_gpu_hrs_job	avg_gpu_mem_gb
+aoes	Atmospheric Ocean & Earth Sci.	3654	35157	9.62	133.88
+ssb	School of Systems Biology	2864	62570	21.85	27.46
+cds	Computational & Data Science	558	8782	15.74	38.10
+chem	Chemistry & Biochemistry	305	15786	51.76	68.43
+ggs	Geography & Geo-Information Sci.	459	1597	3.48	75.97
+math	Mathematical Sciences	240	4260	17.75	160.34
+phys	Physics & Astronomy	164	671	4.09	48.72
+biol	Biology	57	79	1.39	12.81

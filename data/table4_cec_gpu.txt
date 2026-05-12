@@ -1,0 +1,14 @@
+# Table 4: CEC GPU job statistics by department, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: dept, dept_long, gpu_jobs, total_gpu_hrs, avg_gpu_hrs_job, avg_gpu_mem_gb
+dept	dept_long	gpu_jobs	total_gpu_hrs	avg_gpu_hrs_job	avg_gpu_mem_gb
+cs	Computer Science	57388	424340	7.39	79.20
+ist	Info. Sciences & Technology	33244	220621	6.64	110.84
+ece	Electrical & Computer Eng.	16750	74279	4.43	41.85
+cyse	Cybersecurity Engineering	3437	7003	2.04	90.16
+seor	Systems Eng. & Operations Research	1077	25688	23.85	86.54
+daen	Data Analytics Engineering	145	3809	26.27	63.59
+beng	Bioengineering	537	1481	2.76	20.86
+ceie	Civil & Environmental Eng.	576	5466	9.49	56.38
+stat	Statistics	190	4360	22.95	32.28
+me	Mechanical Engineering	222	709	3.19	62.56

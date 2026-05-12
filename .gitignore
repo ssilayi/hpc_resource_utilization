@@ -1,0 +1,64 @@
+## ============================================================
+## .gitignore — Hopper HPC Utilization Paper
+## ============================================================
+
+# ---- LaTeX build artefacts -----------------------------------
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.xdv
+_minted-*/
+auto/
+
+# ---- compiled PDF (keep source, not the build output) --------
+# Comment out the next line if you want to commit the PDF
+main.pdf
+
+# ---- Python artefacts ----------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ---- OS artefacts --------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ---- Editor artefacts ----------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+\#*\#
+*.sublime-workspace
+*.sublime-project
+
+# ---- Environment ---------------------------------------------
+.env
+venv/
+env/
+.python-version

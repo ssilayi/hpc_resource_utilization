@@ -1,0 +1,12 @@
+# Table 2: Job submissions by college, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: college, college_long, jobs, share_pct
+college	college_long	jobs	share_pct
+CEC	Engineering & Computing	1851516	63.72
+COS	College of Science	967083	33.28
+CHSS	Humanities & Social Science	63936	2.20
+SOM	School of Management	2660	0.09
+ORC	Research Computing	1865	0.06
+CHHS	Health & Human Services	403	0.01
+EHD	Education & Human Dev.	2	0.00
+LAW	Law	6	0.00

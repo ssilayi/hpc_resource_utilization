@@ -1,0 +1,14 @@
+# Table 5: COS CPU job statistics by department, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: dept, dept_long, cpu_jobs, total_cpu_hrs, avg_cpu_hrs_job, avg_mem_gb
+dept	dept_long	cpu_jobs	total_cpu_hrs	avg_cpu_hrs_job	avg_mem_gb
+phys	Physics & Astronomy	164088	15371948	93.68	83.78
+aoes	Atmospheric Ocean & Earth Sci.	105579	5106175	48.36	254.60
+math	Mathematical Sciences	25265	2686843	106.35	54.78
+biol	Biology	18187	525899	28.92	110.07
+ggs	Geography & Geo-Information Sci.	9192	877814	95.50	227.83
+cds	Computational & Data Science	8587	751942	87.57	27.58
+chem	Chemistry & Biochemistry	4439	1146580	258.30	188.83
+ssb	School of Systems Biology	1112	80278	72.19	56.13
+esp	Environmental Science & Policy	2916	166799	57.20	25.80
+ipn	Interdisciplinary Program (Neuroscience)	2731	53916	19.74	35.70
