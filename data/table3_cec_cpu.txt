@@ -1,0 +1,14 @@
+# Table 3: CEC CPU job statistics by department, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: dept, dept_long, cpu_jobs, total_cpu_hrs, avg_cpu_hrs_job, avg_mem_gb
+dept	dept_long	cpu_jobs	total_cpu_hrs	avg_cpu_hrs_job	avg_mem_gb
+ist	Info. Sciences & Technology	785603	417913	0.53	4.10
+stat	Statistics	404830	2598905	6.42	13.30
+ceie	Civil & Environmental Eng.	403909	7592789	18.80	35.27
+cs	Computer Science	128234	4044583	31.54	34.61
+beng	Bioengineering	2062	72519	35.17	151.23
+cyse	Cybersecurity Engineering	2138	298126	139.44	221.67
+ece	Electrical & Computer Eng.	3339	679437	203.49	32.56
+daen	Data Analytics Engineering	337	68951	204.60	48.94
+me	Mechanical Engineering	474	217121	458.06	143.81
+seor	Systems Eng. & Operations Research	88	470	5.34	11.90

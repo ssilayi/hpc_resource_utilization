@@ -1,0 +1,14 @@
+# Table 7: Top instructional GPU accounts, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Columns: account, course_desc, students, gpu_jobs, gpu_hrs, avg_gpu_hrs_job
+account	course_desc	students	gpu_jobs	gpu_hrs	avg_gpu_hrs_job
+cs678fl25	Machine Learning (Fall 25)	16	2174	4601	2.12
+alt726sp25	AIT 726 (Spring 25)	1	94	1092	11.63
+cs471sp25	CS 471 (Spring 25)	1	72	4954	68.81
+cs747sp25	CS 747 (Spring 25)	4	162	1330	8.21
+cs757sp25	CS 757 (Spring 25)	2	114	1001	8.79
+cs678fl24	Machine Learning (Fall 24)	4	491	1018	2.07
+alt726fl24	AIT 726 (Fall 24)	3	126	873	6.93
+alt726fl25	AIT 726 (Fall 25)	2	77	239	3.11
+ece555sp25	ECE 555 (Spring 25)	8	180	879	4.88
+cs747fl24	CS 747 (Fall 24)	3	43	2143	49.83

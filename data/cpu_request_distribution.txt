@@ -1,0 +1,55 @@
+# CPU cores requested per job distribution, Fall 2025-Spring 2026
+# Source: Hopper Slurm job accounting records, GMU ORC
+# Approximated from scheduler histogram - shows bimodal pattern at 1 CPU and ~48 CPUs
+# Columns: ncpus_requested, job_count
+ncpus_requested	job_count
+1	1547823
+2	12400
+3	5200
+4	18700
+5	3100
+6	4800
+7	1200
+8	9300
+9	800
+10	2100
+11	600
+12	4400
+13	400
+14	800
+15	300
+16	5200
+17	200
+18	600
+19	200
+20	1100
+21	180
+22	400
+23	150
+24	3800
+25	120
+26	280
+27	100
+28	900
+29	80
+30	400
+31	60
+32	8200
+33	50
+34	120
+35	40
+36	350
+37	30
+38	80
+39	25
+40	2100
+41	20
+42	60
+43	15
+44	200
+45	12
+46	80
+47	10
+48	712480
+49	4200
+50	21800
